@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // const arr = ['sun123', 'moon123', 'sun456', 'moon456', 'sun789', 'moon789']
+    // const cate = ['sun', 'moon']
+    // const data = arr.reduce((acc, cur) => {
+    //     for (let i of cate) {
+    //         if (cur.startsWith(i)){
+    //             acc[i] = [...(acc[i] || []), cur]
+    //         }
+    //     }
+    //     return acc
+    // }, {})
+    // console.log(data)
+
+    // var rotateString = function (s, goal) {
+    //     let flag = false
+    //     for (let i of s) {
+    //         s = s.slice(1) + i
+    //         if (s === goal) {
+    //             flag = true
+    //             break
+    //         }
+    //     }
+    //     return flag
+    // };
+    // const flag = rotateString('abcde', 'cdeab')
+
+    // var countNumbersWithUniqueDigits = function (n) {
+    //     let num = 0
+    //     let count = 0
+    //     while (num.toString().length <= n) {
+    //         let arr = num.toString().split('')
+    //         if ([...new Set(arr)].length === arr.length) {
+    //             count += 1
+    //         }
+    //         num += 1
+    //     }
+    //     return count
+    // };
+    //
+    // const count = countNumbersWithUniqueDigits(7)
+    // console.log(count)
+
+    // var maximumWealth = function (accounts) {
+    //     return Math.max(...accounts.reduce((acc, cur) => (acc.push(cur.reduce((a, c) => (a += c, a), 0)), acc), []))
+    // };
+    //
+    // console.log(maximumWealth([[2,8,7],[7,1,3],[1,9,5]]))
+
+    // const arr = [{"title": "疫情防控指挥部", "about": "", "tel": "0755-**313**", "flag": 1}, {
+    //     "title": "爱心车队",
+    //     "about": "保障范围：市区",
+    //     "tel": "0755-**820**",
+    //     "flag": 1
+    // },
+    //     {"title": "供电公司", "about": "", "tel": "95598", 'flag': 1}]
+    //
+    // const a = arr.map(({title, tel, ...other}) => (other.name = title, other.telphone = tel, other))
+    // console.log(a)
+
+    // var arr1 = [
+    //     {field: 'order_date', title: '单据日期'}
+    //     , {field: 'order_sn', title: '单据编号'}
+    //     , {field: 'date', title: '时间'}
+    //     , {field: 'username', title: '客户名称'}
+    //     , {field: 'goods_sn', title: '商品编码'}
+    // ]
+    //
+    // var arr2 = [
+    //     {field: 'order_date', title: '单据日期'}
+    //     , {field: 'order_sn', title: '单据编号'}
+    //     , {field: 'goods_unit', title: '单位'}
+    //     , {field: 'goods_number', title: '数量'}
+    //     , {field: 'date', title: '时间'}
+    //     , {field: 'username', title: '客户名称'}
+    //     , {field: 'goods_sn', title: '商品编码'}
+    // ]
+    //
+    // const arr = arr2.map(JSON.stringify).reduce((acc, cur, index) => {
+    //     if (!arr1.map(JSON.stringify).includes(cur)) {
+    //         let obj = JSON.parse(cur)
+    //         obj.index = index
+    //         acc.push(obj)
+    //     }
+    //     return acc
+    // }, [])
+    //
+    // console.log(arr)
+
+    const arr1 = [
+        {field: 'order_date', title: '单据日期'}
+        , {field: 'order_sn', title: '单据编号'}
+        , {field: 'date', title: '时间'}
+        , {field: 'username', title: '客户名称'}
+        , {field: 'goods_sn', title: '商品编码'}
+    ]
+
+    const arr2 = [
+        {field: 'order_date', title: '单据日期'}
+        , {field: 'order_sn', title: '单据编号'}
+        , {field: 'goods_unit', title: '单位'}
+        , {field: 'goods_number', title: '数量'}
+        , {field: 'date', title: '时间'}
+        , {field: 'username', title: '客户名称'}
+        , {field: 'goods_sn', title: '商品编码'}
+    ]
+
+
+    console.log(Array.from(new Set([...arr1.concat(arr2).map(JSON.stringify)])).map(JSON.parse))
+
+
+    // const wait = (delay) => {
+    //     return new Promise((resolve, reject) => {
+    //         setTimeout(() => {
+    //             console.log(delay)
+    //             resolve()
+    //         }, delay)
+    //     })
+    // }
+    //
+    // Promise.all([wait(1000), wait(2000)]).then(res => {
+    //     console.log('done')
+    // })
+
+
+</script>
+</body>
+</html>

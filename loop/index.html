@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    function sleep(time) {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve()
+            }, time * 1000)
+        })
+    }
+
+    const arr = [[1], [2], [3], [4], [5]]
+
+    async function main() {
+        for (let i of arr) {
+            for (let j of i) {
+                await sleep(1)
+                console.log(j)
+            }
+        }
+        console.log('完成')
+    }
+
+    main()  // 执行一下
+
+</script>
+</body>
+</html>
