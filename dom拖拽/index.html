@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script>
+    document.documentElement.style.fontSize = document.documentElement.clientWidth / 37.5 + 'px'
+</script>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    div {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .blank-cell-group, .char-cell-group {
+        width: 100%;
+        flex-direction: row;
+    }
+
+    .char-cell-group {
+        flex-wrap: wrap;
+        margin-top: 5rem;
+    }
+
+    .blank-cell-group .cell-item, .char-cell-group .cell-item {
+        width: 25%;
+        height: 25vw;
+        padding: .5rem;
+        box-sizing: border-box;
+    }
+
+    .blank-cell-group .cell-item .wrapper, .char-cell-group .cell-item .wrapper {
+        width: 100%;
+        height: 100%;
+        border: .2rem solid #ddd;
+        box-sizing: border-box;
+    }
+
+    .char-cell-group .cell-item .wrapper {
+        border: none;
+        background-color: orange;
+        font-size: 6rem;
+        justify-content: center;
+        align-items: center;
+        color: white;
+    }
+</style>
+<body>
+<div id="app">
+    <div class="container">
+        <div class="blank-cell-group">
+            <div class="cell-item">
+                <div class="wrapper">
+
+                </div>
+            </div>
+            <div class="cell-item">
+                <div class="wrapper">
+
+                </div>
+            </div>
+            <div class="cell-item">
+                <div class="wrapper">
+
+                </div>
+            </div>
+            <div class="cell-item">
+                <div class="wrapper">
+
+                </div>
+            </div>
+        </div>
+        <div class="char-cell-group">
+
+        </div>
+    </div>
+</div>
+<script>
+    (() => {
+        const idoms = ['亡羊补牢', '百里挑一', '审时度势', '落花流水'],
+            charCellGroup = document.querySelector('.char-cell-group'),
+            // 校验框集合
+            blankCellGroup = document.querySelectorAll('.blank-cell-group .cell-item .wrapper')
+        // 成语打散字符集合
+        let charCollection = [],
+            // 校验框坐标集合
+            blankAreas = [],
+            // 字符框坐标集合
+            charAreas = [],
+            // 结果集合
+            resArr = [undefined, undefined, undefined, undefined],
+            // 字符dom集合
+            chars = null,
+            startX = 0,
+            startY = 0,
+            cellX = 0,
+            cellY = 0,
+            cellW,
+            cellH,
+            mouseX = 0,
+            mouseY = 0
+        const init = () => {
+            charCollection = formatCharsArr(idoms)
+            render()
+            chars = charCellGroup.querySelectorAll('.cell-item .wrapper')
+            getAreas(blankCellGroup, blankAreas)
+            getAreas(chars, charAreas)
+            bindEvent()
+        }
+
+        const render = () => {
+            let list = ''
+            charCollection.forEach((item, index) => {
+                list += charCellTpl(item, index)
+            })
+            charCellGroup.innerHTML = list
+        }
+
+        const bindEvent = () => {
+            let char = null
+            for (let i = 0; i < chars.length; i++) {
+                char = chars[i]
+                char.addEventListener('touchstart', handleTouchStart, false)
+                char.addEventListener('touchmove', handleTouchMove, false)
+                char.addEventListener('touchend', handleTouchEnd, false)
+            }
+        }
+
+        function handleTouchStart(e) {
+            cellW = this.offsetWidth
+            cellH = this.offsetHeight
+            cellX = this.offsetLeft
+            cellY = this.offsetTop
+            startX = e.touches[0].clientX
+            startY = e.touches[0].clientY
+            // 记录鼠标点击坐标与边框间的距离，此距离不变
+            mouseX = startX - cellX
+            mouseY = startY - cellY
+            this.style.width = cellW / 10 + 'rem'
+            this.style.height = cellH / 10 + 'rem'
+            this.style.position = 'fixed'
+            setPosition(this, {startX: cellX, startY: cellY})
+        }
+
+        function handleTouchMove(e) {
+            e.preventDefault()
+            const moveX = e.touches[0].clientX,
+                moveY = e.touches[0].clientY
+            // 获取偏移量
+            cellX = moveX - mouseX
+            cellY = moveY - mouseY
+            setPosition(this, {startX: cellX, startY: cellY})
+        }
+
+        function handleTouchEnd(e) {
+            const blankWidth = blankCellGroup[0].offsetWidth,
+                blankHeight = blankCellGroup[0].offsetHeight
+            for (let i = 0; i < blankAreas.length; i++) {
+                if (resArr[i] !== undefined) {
+                    continue
+                }
+                // 顶点距离
+                let {startX, startY} = blankAreas[i]
+                if (
+                    (
+                        cellX > startX &&
+                        // 超过宽度的一半
+                        cellX < startX + blankWidth / 2 &&
+                        cellY > startY &&
+                        // 超过高度的一半
+                        cellY < startY + blankHeight / 2
+                    )
+                    ||
+                    (
+                        cellX + blankWidth > startX + blankWidth / 2 &&
+                        cellX + blankWidth < startX + blankWidth &&
+                        cellY > startY &&
+                        cellY < startY + blankHeight / 2
+                    )
+                ) {
+                    setPosition(this, {startX, startY})
+                    setResArr(this, i)
+                    if (!resArr.includes(undefined)) {
+                        setTimeout(() => {
+                            if (checkResult()) {
+                                alert('正确')
+                            } else {
+                                alert('错了')
+                            }
+                            resetPosition()
+                        })
+
+                    }
+                    return;
+                }
+            }
+            const index = Number(this.dataset.index),
+                charArea = charAreas[index]
+            resArr.forEach((item, i) => {
+                if (item) {
+                    if (item.index === index) {
+                        resArr[i] = undefined
+                    }
+                }
+            })
+            console.log(resArr)
+            setPosition(this, {...charArea})
+        }
+
+        const getAreas = (domCollection, arrWrapper) => {
+            let startX = 0,
+                startY = 0,
+                item = null
+            for (let i = 0; i < domCollection.length; i++) {
+                item = domCollection[i]
+                startX = item.offsetLeft
+                startY = item.offsetTop
+                arrWrapper.push({
+                    startX, startY
+                })
+            }
+        }
+
+        const formatCharsArr = (arr) => {
+            return arr.reduce((a, c) => {
+                return a.concat(c.split(''))
+            }, []).sort(randomSort)
+        }
+        const randomSort = (a, b) => {
+            return Math.random() > 0.5 ? -1 : 1
+        }
+        const charCellTpl = (char, index) => {
+            return (
+                `
+                <div class="cell-item">
+                    <div class="wrapper" data-index="${index}">
+                        ${char}
+                    </div>
+                </div>
+                `
+            )
+        }
+        const setPosition = (el, {startX, startY}) => {
+            el.style.left = startX / 10 + 'rem'
+            el.style.top = startY / 10 + 'rem'
+        }
+        const setResArr = (el, index) => {
+            resArr[index] = {
+                char: el.innerText,
+                index: Number(el.dataset.index),
+                el
+            }
+        }
+        const checkResult = () => {
+            return idoms.includes(resArr.reduce((a, c) => {
+                return a + c.char
+            }, ''))
+        }
+        const resetPosition = () => {
+            resArr.forEach(item => {
+                const el = item.el,
+                    index = Number(el.dataset.index),
+                    {startX, startY} = charAreas[index]
+                setPosition(el, {startX, startY})
+            })
+
+            resArr = [undefined, undefined, undefined, undefined]
+            startX = 0
+            startY = 0
+            cellX = 0
+            cellY = 0
+            cellW = 0
+            cellH = 0
+            mouseX = 0
+            mouseY = 0
+        }
+        init()
+    })()
+</script>
+</body>
+</html>

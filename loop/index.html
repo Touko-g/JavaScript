@@ -14,19 +14,43 @@
         })
     }
 
+    //
     const arr = [[1], [2], [3], [4], [5]]
+    //
+    // async function main() {
+    //     for (let i of arr) {
+    //         for (let j of i) {
+    //             await sleep(1)
+    //             console.log(j)
+    //         }
+    //     }
+    //     console.log('完成')
+    // }
+    //
+    // main()  // 执行一下
 
-    async function main() {
-        for (let i of arr) {
-            for (let j of i) {
-                await sleep(1)
-                console.log(j)
-            }
+    Array.prototype.myForEach = async function (callback, thisArg) {
+        const _arr = this,
+            _isArray = Array.isArray(_arr),
+            _thisArg = thisArg ? Object(thisArg) : window
+        if (!_isArray) {
+            throw new TypeError('The caller of myForEach must be the type Array')
         }
-        console.log('完成')
+        for (let i = 0; i < _arr.length; i++) {
+            await callback.call(_thisArg, _arr[i], i, _arr)
+        }
     }
 
-    main()  // 执行一下
+    arr.myForEach(async item => {
+        await sleep(1)
+        console.log(item)
+    })
+
+    arr.forEach(async item=>{
+        await sleep(1)
+        console.log(item)
+    })
+
 
 </script>
 </body>
