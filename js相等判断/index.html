@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // 严格相等 === 值相同，类型相同
+
+    // 非严格相等 == 类型相同比较值
+    // 类型不同 转换为相同的类型再进行严格相等比较
+    // 除null,undefined,Object以外类型不同均会转换为Number进行比较，Object转换为原始值再比较, Object.toString().valueOf()
+
+    // 同值相等 同一个引用判断，同一个值判断
+    const obj = {}
+    // 同值相等不能重复声明 +0 -0
+    // Object.defineProperty(obj,'a',{
+    //     value:+0
+    // })
+    // Object.defineProperty(obj,'a',{
+    //     value:-0
+    // })
+    // 同值相等能重复声明 NaN NaN
+    // Object.defineProperty(obj,'a',{
+    //     value:NaN
+    // })
+    // Object.defineProperty(obj,'a',{
+    //     value:NaN
+    // })
+
+    // Object.is(value1,value2) 判断两个值是否为同一个值。
+    // 参数就是两个值，返回值的结果就是同值相等判断的bool结果
+
+    // 自定义Object.is
+    Object.prototype.myIs = function (a, b) {
+        if (a === b) {
+            // a!==0 判断a是否为0，为0则判断a和b是否为 +0 和 -0
+            // 1 / +0->Infinity 1 / -0->-Infinity Infinity!==-Infinity -> true
+            return a !== 0 || 1 / a === 1 / b
+        }
+        // 只有NaN!==NaN -> ture
+        return a !== a && b !== b
+    }
+    console.log(Object.myIs(1,1))
+    console.log(Object.myIs(1,'1'))
+    console.log(Object.myIs(1,true))
+    console.log(Object.myIs(-0,+0))
+    console.log(Object.myIs(NaN,NaN))
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    const obj = {
+        name: 'mayu',
+        age: 18,
+        hobby: ['eat', 'play'],
+        friends: {
+            'timo': {
+                age: 18,
+                hobby: ['eat']
+            }
+        }
+    }
+    const deepClone = (origin, target) => {
+        const result = target || {}
+        for (let k in origin) {
+            if (origin.hasOwnProperty(k)) {
+                let item = origin[k]
+                if (typeof item === 'object' && item !== null) {
+                    result[k] = item instanceof Array ? [] : {}
+                    deepClone(origin[k], result[k])
+                } else {
+                    result[k] = item
+                }
+            }
+        }
+        return result
+    }
+
+    const copy = deepClone(obj)
+
+    const deepClonePlus = (origin, hashMap = new WeakMap()) => {
+        if (origin == undefined || typeof origin !== 'object') {
+            return origin
+        }
+        if (origin instanceof Date) {
+            return new Date(origin)
+        }
+        if (origin instanceof RegExp) {
+            return new RegExp(origin)
+        }
+
+        const hashKey = hashMap.get(origin)
+        console.log(hashKey, origin)
+
+        if (hashKey) {
+            console.log('已经存在，直接返回')
+            return hashKey
+        }
+
+        const target = new origin.constructor()
+        hashMap.set(origin, target)
+        for (let k in origin) {
+            target[k] = deepClonePlus(origin[k], hashMap)
+        }
+        return target
+    }
+    let test1 = {}
+    let test2 = {}
+    test1.test2 = test2
+    test2.test1 = test1
+    console.log(deepClonePlus(test2))
+</script>
+</body>
+</html>

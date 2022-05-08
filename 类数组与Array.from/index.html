@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    const obj = {
+        0: 1,
+        1: 2,
+        2: 3,
+        length: 3
+    }
+    // length决定了返回新数组的长度
+    let newArr = Array.from(obj)
+    console.log(newArr)
+
+    // Array.from(arrayLike[, mapFn[, thisArg]])
+    // arrayLike->想要转换成数组的伪数组对象或可迭代对象。
+    // mapFn->如果指定了该参数，新数组中的每个元素会执行该回调函数。
+    // thisArg->可选参数，执行回调函数 mapFn 时 this 对象。
+
+    newArr = Array.from(obj, function (item, index) {
+        return {
+            studentId: this.prefix + item,
+            order: index
+        }
+    }, {
+        prefix: 'No.'
+    })
+
+    console.log(newArr)
+
+</script>
+</body>
+</html>
