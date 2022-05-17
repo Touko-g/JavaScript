@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    // call 用来执行函数，改变this指向
+    // 使用方法 fn.call(this, arg1, arg2..., argn)
+    // function add(a, b) {
+    //     return a + b;
+    // }
+    // console.log(add(1, 2));						// 3
+    // // 第一个参数是null，因为add函数不需要this，用null来忽略
+    // console.log(add.call(null, 1, 2));			// 3
+
+    // apply call 跟 apply 执行后的功能一模一样
+    // 使用方法 fn.apply(this, [arg1, arg2..., argn])
+    // function add(a, b) {
+    //     return a + b;
+    // }
+    // console.log(add(1, 2));						// 3
+    // console.log(add.call(null, 1, 2));			// 3
+    // console.log(add.apply(null, [1, 2]));		// 3
+    // console.log(add.apply(null, 1, 2));			// Uncaught TypeError: CreateListFromArrayLike called on non-object
+
+    // call和apply的区别
+    // 需求，把函数内所有参数都相加
+    // var list = [1, 5, 8];
+    //
+    // function add() {
+    //     return Array.from(arguments).reduce(function (sum, num) {
+    //         return sum + num;
+    //     });
+    // }
+    //
+    // console.log(add.call(null, 1, 2));			// 3
+    // console.log(add.apply(null, list));			// 14
+    // 当函数内没有限定参数，不知道参数的数量时可以使用apply
+
+    // bind
+    // 使用方法 fn.bind(this, arg1, arg2..., argn)
+    // 功能
+    // 明確指定 this
+    // 回傳一個包裹函式，當我們執行這個函式時，同時也會將帶入 bind 的 arguments 一起帶進 Function 中。類似 Currying 的概念。
+    // function add(a, b) {
+    //     return a + b;
+    // }
+    // add.call(null, 1, 2);			// 3
+    // add.call(null, 1, 4);			// 5
+    // add.apply(null, [1, 2]);		// 3
+    // add.apply(null, [1, 4]);			// 5
+    // var add1 = add.bind(null, 1);
+    // console.log(add1(2));			// 3
+    // console.log(add1(4));			// 5
+    // 建
+    // 简易bind
+    function bind(t, callback) {
+        console.log(arguments)
+        var outerArgs = Array.from(arguments).slice(2);
+        return function () {
+            var innerArgs = Array.from(arguments);
+            return callback.apply(t, outerArgs.concat(innerArgs));
+        }
+    }
+
+    function add() {
+        return Array.from(arguments).reduce(function (sum, num) {
+            return sum + num;
+        });
+    }
+
+    var addWithBind = bind(null, add, 1, 5);
+    console.log(addWithBind(8));				// 14
+</script>
+</body>
+</html>

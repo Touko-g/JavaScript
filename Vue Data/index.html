@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+    function Vue(options) {
+        var data = options.data(),
+            _this = this
+        for (var k in data) {
+            (function (k) {
+                Object.defineProperty(_this, k, {
+                    set(v) {
+                        data[k] = v
+                    },
+                    get() {
+                        return data[k]
+                    }
+                })
+            })(k)
+        }
+    }
+
+    const vm = new Vue({
+        data() {
+            return {
+                a: 1,
+                b: 2
+            }
+        }
+    })
+
+    console.log(vm.a)
+    console.log(vm.b)
+    vm.a = 3
+    console.log(vm.a)
+    console.log(vm.b)
+
+</script>
+</body>
+</html>

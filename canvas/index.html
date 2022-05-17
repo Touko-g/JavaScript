@@ -11,5 +11,68 @@
 
 <button onclick="clear()">clear</button>
 <script src="app.js"></script>
+<script>
+    const deepClone = (origin, hasMap = new WeakMap()) => {
+        if (origin == undefined || typeof origin !== 'object') {
+            return origin
+        }
+        if (origin instanceof RegExp) {
+            return new RegExp(origin)
+        }
+        if (origin instanceof Date) {
+            return new Date(origin)
+        }
+        if (hasMap.get(origin)) {
+            return origin
+        }
+
+        const target = new origin.constructor()
+
+        hasMap.set(origin, target)
+
+        for (let k in origin) {
+            target[k] = deepClone(origin[k], hasMap)
+        }
+        return target
+    }
+    let test1 = {}
+    let test2 = {}
+    test1.test2 = test2
+    test2.test1 = test1
+    console.log(deepClone(test2))
+
+
+    const debounce = (callback, delay) => {
+        let timer = null
+        return function () {
+            timer && clearTimeout(timer)
+            timer = setTimeout(() => {
+                callback.apply(this, arguments)
+            }, delay)
+        }
+    }
+
+    const throttle = (callback,delay)=>{
+        let timer = null
+        return function () {
+            if (timer){
+                return
+            }
+            timer = setTimeout(() => {
+                callback.apply(this, arguments)
+                timer = null
+            }, delay)
+        }
+    }
+
+    // test
+    function testThrottle(e, content) {
+        console.log(e, content);
+    }
+    var testThrottleFn = throttle(testThrottle, 1000); // 节流函数
+    document.onmousemove = function (e) {
+        testThrottleFn(e, 'throttle'); // 给节流函数传参
+    }
+</script>
 </body>
 </html>

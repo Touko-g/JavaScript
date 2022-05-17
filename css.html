@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        #app{
+            display: grid;.
+            gap: 2px;
+            grid-template-columns: repeat(12, 1fr);
+        }
+        #app div{
+            background: black;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+        @media only screen and (max-width: 1200px) {
+            #app{
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        @media only screen and (max-width: 900px) {
+            #app{
+                grid-template-columns: repeat(6, 1fr);
+            }
+        }
+        @media only screen and (max-width: 600px) {
+            #app{
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        @media only screen and (max-width: 375px) {
+            #app{
+                grid-template-columns: repeat(1, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div>Card-1</div>
+    <div>Card-2</div>
+    <div>Card-3</div>
+    <div>Card-4</div>
+    <div>Card-5</div>
+    <div>Card-6</div>
+    <div>Card-7</div>
+    <div>Card-8</div>
+    <div>Card-9</div>
+    <div>Card-10</div>
+    <div>Card-11</div>
+    <div>Card-12</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="utils.js"></script>
+<body>
+<script>
+    let arr = [1, 2, 3]
+    arr.myForEach(function (item) {
+        console.log(item, this.a)
+    }, {a: 1})
+
+    const res = arr.myMap(function (item) {
+        return item + this.a
+    }, {a: 1})
+    console.log(res)
+
+    const res1 = arr.myFilter(function (item) {
+        return item > this.a
+    }, {a: 1})
+    console.log(res1)
+
+    const res2 = arr.myEvery(function (item) {
+        return item < this.a
+    }, {a: 2})
+    console.log(res2)
+
+    const res3 = arr.mySome(function (item) {
+        return item < this.a
+    }, {a: 2})
+    console.log(res3)
+
+    const res4 = arr.myReduce(function (prev, cur) {
+        return prev + cur
+    }, 0)
+    console.log(res4)
+
+    const res5 = arr.myReduceRight(function (prev, cur) {
+        return prev + cur
+    }, 0)
+    console.log(res5)
+</script>
+</body>
+</html>
