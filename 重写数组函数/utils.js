@@ -35,6 +35,8 @@ Array.prototype.myForEach = function (callback, thisArg) {
     }
 }
 
+
+
 Array.prototype.myMap = function (callback, thisArg) {
     var _arr = this
     var _len = _arr.length
