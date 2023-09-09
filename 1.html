@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .a {
+            width: 200px;
+            background: #dddddd;
+            overflow: hidden;
+            /*text-overflow: ellipsis;*/
+            /*white-space: nowrap;*/
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        .b {
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width:0 50px 50px;
+            border-color:transparent transparent #c40000;
+        }
+    </style>
+</head>
+<body>
+<div class="a">wsdazfiokfaok123我佛啊啊速度飞快1sdfa12asdfweqk色哦批发颇为</div>
+<div class="b"></div>
+<script>
+    function debounce(callback, delay) {
+        let timer = null
+        return function () {
+            timer && clearTimeout(timer)
+            timer = setTimeout(() => {
+                callback.apply(this, arguments)
+            }, delay)
+        }
+    }
+
+    function throttle(callback, delay) {
+        let timer = null
+        return function () {
+            if (timer) {
+                return
+            }
+            timer = setTimeout(() => {
+                callback.apply(this, arguments)
+                timer = null
+            }, delay)
+        }
+    }
+
+    function deepClone(origin, target) {
+        if (typeof origin !== 'object' || origin == undefined) {
+            return origin
+        }
+        target = target || {}
+        for (let k in origin) {
+            if (origin.hasOwnProperty(k)) {
+                let item = origin[k]
+                if (typeof item === 'object' && item !== null) {
+                    target[k] = item.constructor()
+                    deepClone(item, target[k])
+                } else {
+                    target[k] = item
+                }
+            }
+        }
+        return target
+    }
+
+    Array.prototype.MyForEach = function (callback, thisArg) {
+        let arr = this
+        let _thisArg = thisArg ? Object(thisArg) : window
+        for (let i = 0; i < arr.length; i++) {
+            callback(_thisArg, arr[i], i, arr)
+        }
+    }
+
+    Function.prototype.MyCall = function (context, ...arg) {
+        context = context ? Object(context) : window
+        context.fn = this
+        let result = context.fn(...arg)
+        delete context.fn
+        return result
+    }
+
+    Function.prototype.MyApply = function (context, arr) {
+        context = context ? Object(context) : window
+        context.fn = this
+        let result
+        if (arr) {
+            result = context.fn(arr)
+        } else {
+            result = context.fn()
+        }
+        delete context.fn
+        return result
+    }
+    Function.prototype.MyBind = function (context, ...arg) {
+        let _this = this
+        return function (...newArg) {
+            _this.myApply(context, [...arg, ...newArg])
+        }
+    }
+</script>
+</body>
+</html>

@@ -23,7 +23,7 @@
             if (origin.hasOwnProperty(k)) {
                 let item = origin[k]
                 if (typeof item === 'object' && item !== null) {
-                    result[k] = item instanceof Array ? [] : {}
+                    result[k] = item.constructor()
                     deepClone(origin[k], result[k])
                 } else {
                     result[k] = item
@@ -34,6 +34,8 @@
     }
 
     const copy = deepClone(obj)
+    copy.friends.timo.age = 20
+    console.log(copy, obj)
 
     const deepClonePlus = (origin, hashMap = new WeakMap()) => {
         if (origin == undefined || typeof origin !== 'object') {
@@ -65,7 +67,7 @@
     let test2 = {}
     test1.test2 = test2
     test2.test1 = test1
-    console.log(deepClonePlus(test2))
+    // console.log(deepClonePlus(test2))
 </script>
 </body>
 </html>

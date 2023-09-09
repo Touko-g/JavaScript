@@ -54,25 +54,102 @@
     // var add1 = add.bind(null, 1);
     // console.log(add1(2));			// 3
     // console.log(add1(4));			// 5
-    // 建
-    // 简易bind
-    function bind(t, callback) {
-        console.log(arguments)
-        var outerArgs = Array.from(arguments).slice(2);
-        return function () {
-            var innerArgs = Array.from(arguments);
-            return callback.apply(t, outerArgs.concat(innerArgs));
+
+    function greet() {
+        console.log(this)
+        return [this.animal, 'typically sleep between', this.sleepDuration].join(' ');
+    }
+
+    const obj = {
+        animal: 'cats', sleepDuration: '12 and 16 hours'
+    };
+
+
+    Function.prototype.myCall = function (context, ...args) {
+        // 将函数设为对象的属性
+        // 注意：非严格模式下,
+        //   指定为 null 和 undefined 的 this 值会自动指向全局对象(浏览器中就是 window 对象)
+        //   值为原始值(数字，字符串，布尔值)的 this 会指向该原始值的自动包装对象(用 Object() 转换）
+        context = context ? Object(context) : window;
+        context.fn = this;
+        // 执行该函数
+        let result = context.fn(...args);
+        // 删除该函数
+        delete context.fn
+        // 注意：函数是可以有返回值的
+        return result;
+    }
+
+    Function.prototype.myApply = function (context, arr) {
+        context = context ? Object(context) : window
+        context.fn = this
+        let res
+        if (arr) {
+            res = context.fn(...arr)
+        } else {
+            res = context.fn()
+        }
+        delete context.fn
+        return res
+    }
+
+    // bind() 方法创建一个新的函数，在 bind() 被调用时，这个新函数的 this 被指定为 bind() 的第一个参数，而其余参数将作为新函数的参数，供调用时使用。
+    Function.prototype.myBind = function (context, ...args) {
+        const _this = this
+        return function (...newArgs) {
+            return _this.myApply(context, [...args, ...newArgs])
         }
     }
 
+
+    console.log(greet.myCall(obj))
+    console.log(add.myCall(null, 1, 2))
+    const adds = add.myBind(null,1)
+    console.log(adds(2,3))
+
+    function Product(name, price) {
+        this.name = name;
+        this.price = price;
+    }
+
+    function Food(name, price) {
+        Product.myCall(this, name, price);
+        this.category = 'food';
+    }
+
+    function Toy(name, price) {
+        Product.myCall(this, name, price);
+        this.category = 'toy';
+    }
+
+    var cheese = new Food('feta', 5);
+    var fun = new Toy('robot', 40);
+    // console.log(cheese, fun)
+
+
+    // 简易bind
+
+    // function bind(t, callback) {
+    //     console.log(arguments)
+    //     var outerArgs = Array.from(arguments).slice(2);
+    //     return function () {
+    //         var innerArgs = Array.from(arguments);
+    //         return callback.apply(t, outerArgs.concat(innerArgs));
+    //     }
+    // }
+    //
     function add() {
         return Array.from(arguments).reduce(function (sum, num) {
             return sum + num;
         });
     }
 
-    var addWithBind = bind(null, add, 1, 5);
-    console.log(addWithBind(8));				// 14
+    //
+    // var addWithBind = bind(null, add, 1, 5);
+    // console.log(addWithBind(8));
+
+    // 14
+
 </script>
 </body>
 </html>

@@ -52,10 +52,10 @@
         }
     }
 
-    const throttle = (callback,delay)=>{
+    const throttle = (callback, delay) => {
         let timer = null
         return function () {
-            if (timer){
+            if (timer) {
                 return
             }
             timer = setTimeout(() => {
@@ -69,6 +69,7 @@
     function testThrottle(e, content) {
         console.log(e, content);
     }
+
     var testThrottleFn = throttle(testThrottle, 1000); // 节流函数
     document.onmousemove = function (e) {
         testThrottleFn(e, 'throttle'); // 给节流函数传参

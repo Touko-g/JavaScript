@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<style>
+    .a {
+        overflow: hidden;
+        /*text-overflow: ellipsis;*/
+        /*white-space: nowrap;*/
+        width: 120px;
+        background: #666666;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+
+</style>
+<body>
+<div class="a">
+    1222222222222222222222222我爱你asdfasdffffffffffffffffff
+</div>
+<script>
+
+    Function.prototype.myCall = function (context, ...args) {
+        context = context ? Object(context) : window
+        context.fn = this
+        const res = context.fn(...args)
+        delete context.fn
+        return res
+    }
+    Function.prototype.myApply = function (context, arr) {
+        context = context ? Object(context) : window
+        context.fn = this
+        let res
+        if (arr) {
+            res = context.fn(...arr)
+        } else {
+            res = context.fn()
+        }
+        delete context.fn
+        return res
+    }
+    Function.prototype.myBind = function (context, ...args) {
+        let _this = this
+        return function (...newArgs) {
+            return _this.myApply(context, [...args, ...newArgs])
+        }
+    }
+    Array.prototype.myForEach = function (callback, thisArg) {
+        const arr = this
+        const _thisArg = thisArg ? Object(thisArg) : window
+        for (let i = 0; i < arr.length; i++) {
+            callback.call(_thisArg, arr[i], i, arr)
+        }
+    }
+
+    function debounce(callback, delay) {
+        let timer = null
+        return function () {
+            timer && clearTimeout(timer)
+            timer = setTimeout(() => {
+                callback.apply(this, arguments)
+            }, delay)
+        }
+    }
+
+    function throttle(callback, delay) {
+        let timer = null
+        return function () {
+            if (timer) {
+                return
+            }
+            timer = setTimeout(() => {
+                callback.apply(this, arguments)
+                timer = null
+            }, delay)
+        }
+    }
+
+    function deepClone(origin, result) {
+        result = result || {}
+        for (let i in origin) {
+            if (origin.hasOwnProperty(i)) {
+                let item = origin[i]
+                if (typeof origin[i] === 'object' && item !== null) {
+                    result[i] = item.constructor()
+                    deepClone(item, result[i])
+                } else {
+                    result[i] = item
+                }
+            }
+        }
+        return result
+    }
+
+    let a = {
+        name: '123',
+        person: {
+            name: 'ab',
+            age: 18
+        },
+        x: null
+    }
+    let b = deepClone(a)
+    b.person.age = 20
+    console.log(a, b)
+</script>
+</body>
+</html>

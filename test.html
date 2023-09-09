@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+
+    Function.prototype.myCall = function (context, ...args) {
+        context = context ? Object(context) : window
+        context.fn = this
+        const res = context.fn(...args)
+        delete context.fn
+        return res
+    }
+
+    Function.prototype.myApply = function (context, arr) {
+        context = context ? Object(context) : window
+        context.fn = this
+        let res
+        if (arr) {
+            res = context.fn(...arr)
+        } else {
+            res = context.fn()
+        }
+        delete context.fn
+        return res
+    }
+
+    Function.prototype.myBind = function (context, ...args) {
+        const _this = this
+        return function (...newArgs) {
+            return _this.myApply(context, [...args, ...newArgs])
+        }
+    }
+
+    console.log(add.myCall(null, 1, 2))
+    const adds = add.myBind(null, 1)
+    console.log(adds(2, 3))
+
+    function add() {
+        return Array.from(arguments).reduce(function (sum, num) {
+            return sum + num;
+        });
+    }
+
+    function debounce(callback, delay) {
+        let timer = null
+        return function () {
+            timer && clearTimeout(timer)
+            timer = setTimeout(() => {
+                callback.apply(this, arguments)
+            }, delay)
+        }
+    }
+
+    function throttle(callback, delay) {
+        let timer = null
+        return function () {
+            if (timer) {
+                return
+            }
+            timer = setTimeout(()=>{
+                callback.apply(this,arguments)
+                timer = null
+            },delay)
+        }
+    }
+
+    function red() {
+        console.log("red");
+    }
+    function green() {
+        console.log("green");
+    }
+    function yellow() {
+        console.log("yellow");
+    }
+    const light = function (timer, cb) {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                cb()
+                resolve()
+            }, timer)
+        })
+    }
+    const step = function () {
+        Promise.resolve().then(() => {
+            return light(3000, red)
+        }).then(() => {
+            return light(2000, green)
+        }).then(() => {
+            return light(1000, yellow)
+        }).then(() => {
+            return step()
+        })
+    }
+
+    step();
+
+
+</script>
+</body>
+</html>
